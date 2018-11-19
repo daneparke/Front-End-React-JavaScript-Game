@@ -1,0 +1,65 @@
+.storyHeader{
+  border-bottom:black 2px solid;
+  display: flex;
+  justify-content: center;
+  max-height:100vh;
+}
+.storyScript{
+  border:black 2px solid;
+  display:flex;
+  flex-direction: column;
+}
+.storyLine{
+  display: flex;
+  justify-content: center;
+}
+.storyContainer{
+  display: flex;
+  flex-direction: column-reverse;
+}
+.cookingItems {
+  display:flex;
+  flex-direction: column;
+}
+.ingredients {
+  display:flex;
+  flex-direction: column
+}
+.invCont {
+  border: solid black 2px;
+  margin-top: 3%
+}
+.companionCont {
+  border: solid black 2px;
+  margin-top: 3%
+}
+.invHeader {
+  display:flex;
+  justify-content: center;
+  border-bottom: solid black 2px
+}
+.equipmentCont {
+  border: solid black 2px;
+  margin-top: 3%
+}
+.weaponCont {
+  border: solid black 2px;
+}
+.batCont {
+  max-width:80%;
+  background-color:tan;
+  border: solid black 4px;
+}
+.enemyCont{
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.attackButtons{
+  display:flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.hidden {
+  display:none;
+}
