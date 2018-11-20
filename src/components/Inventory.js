@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
 const Inventory = (props) => {
     let inventory = props.inventory.map(item => {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
 const Story = (props) => {
     let story = props.story.map(script => {
