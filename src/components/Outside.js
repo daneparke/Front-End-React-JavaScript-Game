@@ -11,13 +11,12 @@ const Outside = (props) => {
                         <div>Health: {props.playerHealth}</div>
                     </div>
                     <div className={`col-5 attackButtons ${props.killedEnemy ? 'hidden' : ''}`}>
-                        <button onClick={props.basicAttack} type="button" className="btn btn-light">Attack</button>
-                        <button onClick={props.companionAttack} type="button" className={`btn btn-light ${props.showCompanion ? '' : 'hidden'}`}>{props.companion} Attack</button>
-                        <button onClick={props.leaveCombat} type="button" className={`btn btn-light ${props.showRunAway ? 'hidden' : ''}`}>Run Away?</button>
+                        <button onClick={props.basicAttack} type="button" className={`btn ${props.disablePlayerAttack ? 'btn-dark' : 'btn-light'}`}>Attack</button>
+                        <button onClick={props.companionAttack} type="button" className={`btn ${props.disableCompanion ? 'btn-dark' : 'btn-light'} ${props.showCompanion ? '' : 'hidden'}`}>{props.companion} Attack</button>
                     </div>
                     <div className={`col-8 attackButtons ${props.killedEnemy ? '' : 'hidden'}`}>
                         <button onClick={props.pickUpItem} type="button" className="btn btn-light">Pick Up {props.droppedItem}</button>
-                        <button onClick={props.leaveCombat} type="button" className="btn btn-light">Leave Item</button>
+                        <button onClick={props.leaveCombat} type="button" className="btn btn-light">Leave</button>
                     </div>
                     <div className={`col-3 enemyCont ${props.killedEnemy ? 'hidden' : ''}`}>
                         <div>{props.enemies[0].grunt.name}</div>

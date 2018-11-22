@@ -61,10 +61,12 @@ class App extends Component {
       enemyHit: false,
       enemyHealth: -20,
       playerHealth: 10,
-      showRunAway: false,
       droppedItem: '',
       killedEnemy: false,
-      player: []
+      player: [],
+      disableCompanion: false,
+      disablePlayerAttack: false,
+      players: []
     }
   }
   async componentDidMount() {
@@ -73,7 +75,13 @@ class App extends Component {
     this.setState({
       enemies: data.enemies
     })
+    let playerResult = await fetch("http://localhost:3001/players")
+    let playerData = await playerResult.json()
+    this.setState({
+      players: playerData.players
+    })
   }
+
   setTimeOutAndState(number, string) {
     setTimeout(() => {
       this.setState({
@@ -434,343 +442,422 @@ class App extends Component {
       });
     }, 3000)
   }
-  sendUser = (event) => {
+  sendUser = async (event) => {
     if (this.state.userName.length === 0) {
       alert("Please Enter Username")
     }
     if (this.state.userName.length > 0 && this.state.userName.length < 11) {
-      this.setState({
-        showEntry: false,
-        showFirst: true,
-        showStory: true,
-      })
       let newPlayer = {
+        id: this.state.players.length + 1,
         name: this.state.userName,
         attack: 0,
         range: 0,
-        friendship: 0,
+        friendship: 0
       }
-      await fetch('http://localhost:3001/player', {
+      if (this.state.players.length > 15) {
+
+      }
+      for (var i = 0; i < this.state.players.length; i++) {
+        if (this.state.players[i].name === this.state.userName) {
+          return (await fetch('http://localhost:3001/players', {
+            method: 'PUT',
+            body: JSON.stringify(newPlayer),
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          })
+            .then(response => response.json())
+            .then((response) => {
+              this.setState({
+                player: [newPlayer],
+                showEntry: false,
+                showFirst: true,
+                showStory: true,
+              })
+            })
+          )
+        }
+      }
+      await fetch('http://localhost:3001/', {
         method: 'POST',
-        body: JSON.stringify(newPlayer),
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        }
-      }).then(response => response.json())
+        },
+        body: JSON.stringify(newPlayer)
+      })
+        .then(response => response.json())
         .then((response) => {
           this.setState({
-            messages: [...this.state.messages, response]
+            player: [newPlayer],
+            showEntry: false,
+            showFirst: true,
+            showStory: true,
           })
         })
+
     }
-  } if(this.state.userName.length > 10) {
-  alert("Sorry Too Long Of A Name, Keep It Under 10 Characters")
-}
+
+    if (this.state.userName.length > 10) {
+      alert("Sorry Too Long Of A Name, Keep It Under 10 Characters")
+    }
   }
 
-panAttack = (event) => {
-  this.setState({
-    story: [...this.state.story, 'You Swing The Pan At The Bat'],
-    batHealth: this.state.batHealth - 1
-  })
-  setTimeout(() => {
+  panAttack = (event) => {
     this.setState({
-      story: [...this.state.story, 'You Hit The Bat, And It Dies'],
-      showBat: false,
-      showCooking: true,
-    });
-  }, 200)
-}
-pancakeThrow = (event) => {
-  this.setState({
-    story: [...this.state.story, 'You Throw A Pancake At The Bat'],
-    batHealth: this.state.batHealth - 1,
-    inventory: ["Pancake", "Pancake"]
-  })
-  setTimeout(() => {
+      story: [...this.state.story, 'You Swing The Pan At The Bat'],
+      batHealth: this.state.batHealth - 1
+    })
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'You Hit The Bat, And It Dies'],
+        showBat: false,
+        showCooking: true,
+      });
+    }, 200)
+  }
+  pancakeThrow = (event) => {
     this.setState({
-      story: [...this.state.story, 'It Hits The Bat'],
-      showBat: false,
-    });
-  }, 200)
-  setTimeout(() => {
-    this.setState({
-      story: [...this.state.story, 'It Falls To The Ground'],
-      showCooking: true,
-    });
-  }, 1000)
-}
-pancakeOffer = (event) => {
-  this.setState({
-    story: [...this.state.story, 'You Hold A Pancake Up'],
-    showBat: false,
-  })
-  setTimeout(() => {
-    this.setState({
-      story: [...this.state.story, 'Whispering Sweet Nothing'],
-    });
-  }, 1000)
-  setTimeout(() => {
-    this.setState({
-      story: [...this.state.story, 'The Bat Lands On Your Hand'],
-    });
-  }, 2000)
-  setTimeout(() => {
-    this.setState({
-      story: [...this.state.story, 'You Share The Pancake'],
+      story: [...this.state.story, 'You Throw A Pancake At The Bat'],
+      batHealth: this.state.batHealth - 1,
       inventory: ["Pancake", "Pancake"]
-    });
-  }, 3000)
-  setTimeout(() => {
+    })
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'It Hits The Bat'],
+        showBat: false,
+      });
+    }, 200)
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'It Falls To The Ground'],
+        showCooking: true,
+      });
+    }, 1000)
+  }
+  pancakeOffer = (event) => {
     this.setState({
-      story: [...this.state.story, 'The Bat Looks Into Your Eyes'],
-    });
-  }, 4000)
-  setTimeout(() => {
+      story: [...this.state.story, 'You Hold A Pancake Up'],
+      showBat: false,
+    })
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'Whispering Sweet Nothing'],
+      });
+    }, 1000)
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'The Bat Lands On Your Hand'],
+      });
+    }, 2000)
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'You Share The Pancake'],
+        inventory: ["Pancake", "Pancake"]
+      });
+    }, 3000)
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'The Bat Looks Into Your Eyes'],
+      });
+    }, 4000)
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'The Bat Winks At You'],
+      });
+    }, 5000)
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'You Got A New Companion!'],
+        companion: [...this.state.companion, 'Bat'],
+        showCompanion: true,
+        showCooking: true,
+      });
+    }, 6000)
+  }
+  stopCooking = (event) => {
     this.setState({
-      story: [...this.state.story, 'The Bat Winks At You'],
-    });
-  }, 5000)
-  setTimeout(() => {
+      showCooking: false,
+      story: [...this.state.story, 'You Stop Cooking']
+    })
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'Now Lets Get Dressed'],
+      });
+    }, 1000)
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'You Open Your Closet'],
+      });
+    }, 2000)
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'What Do You Want To Wear?'],
+        showClothes: true
+      });
+    }, 3000)
+  }
+  addShirt = (event) => {
     this.setState({
-      story: [...this.state.story, 'You Got A New Companion!'],
-      companion: [...this.state.companion, 'Bat'],
-      showCompanion: true,
-      showCooking: true,
-    });
-  }, 6000)
-}
-stopCooking = (event) => {
-  this.setState({
-    showCooking: false,
-    story: [...this.state.story, 'You Stop Cooking']
-  })
-  setTimeout(() => {
+      story: [...this.state.story, 'You Put A Shirt On'],
+      showShirt: false,
+      showNude: false,
+      letsGo: true,
+      equipment: [...this.state.equipment, "Shirt"],
+      showEquipment: true,
+    })
+  }
+  addPants = (event) => {
     this.setState({
-      story: [...this.state.story, 'Now Lets Get Dressed'],
-    });
-  }, 1000)
-  setTimeout(() => {
+      story: [...this.state.story, 'You Put Pants On'],
+      showPants: false,
+      showNude: false,
+      letsGo: true,
+      equipment: [...this.state.equipment, "Pants"],
+      showEquipment: true,
+    })
+  }
+  addBoots = (event) => {
     this.setState({
-      story: [...this.state.story, 'You Open Your Closet'],
-    });
-  }, 2000)
-  setTimeout(() => {
+      story: [...this.state.story, 'You Put Boots On'],
+      showBoots: false,
+      showNude: false,
+      letsGo: true,
+      equipment: [...this.state.equipment, "Boots"],
+      showEquipment: true,
+    })
+  }
+  goNaked = (event) => {
     this.setState({
-      story: [...this.state.story, 'What Do You Want To Wear?'],
-      showClothes: true
-    });
-  }, 3000)
-}
-addShirt = (event) => {
-  this.setState({
-    story: [...this.state.story, 'You Put A Shirt On'],
-    showShirt: false,
-    showNude: false,
-    letsGo: true,
-    equipment: [...this.state.equipment, "Shirt"],
-    showEquipment: true,
-  })
-}
-addPants = (event) => {
-  this.setState({
-    story: [...this.state.story, 'You Put Pants On'],
-    showPants: false,
-    showNude: false,
-    letsGo: true,
-    equipment: [...this.state.equipment, "Pants"],
-    showEquipment: true,
-  })
-}
-addBoots = (event) => {
-  this.setState({
-    story: [...this.state.story, 'You Put Boots On'],
-    showBoots: false,
-    showNude: false,
-    letsGo: true,
-    equipment: [...this.state.equipment, "Boots"],
-    showEquipment: true,
-  })
-}
-goNaked = (event) => {
-  this.setState({
-    story: [...this.state.story, 'LETS GO STREAKING!!!'],
-    showClothes: false,
-  })
-  setTimeout(() => {
+      story: [...this.state.story, 'LETS GO STREAKING!!!'],
+      showClothes: false,
+    })
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'You Prance To The Door'],
+      });
+    }, 1000)
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'Do You Grab Anything Before You Leave?'],
+        showLeaving: true
+      });
+    }, 2000)
+  }
+  goOutside = (event) => {
     this.setState({
-      story: [...this.state.story, 'You Prance To The Door'],
-    });
-  }, 1000)
-  setTimeout(() => {
+      story: [...this.state.story, 'You Walk To The Door'],
+      showClothes: false,
+    })
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'You Grab Your Backpack'],
+      });
+    }, 1000)
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'Do You Grab Anything Before You Leave?'],
+        showLeaving: true
+      });
+    }, 2000)
+  }
+  addUmbrella = (event) => {
     this.setState({
-      story: [...this.state.story, 'Do You Grab Anything Before You Leave?'],
-      showLeaving: true
-    });
-  }, 2000)
-}
-goOutside = (event) => {
-  this.setState({
-    story: [...this.state.story, 'You Walk To The Door'],
-    showClothes: false,
-  })
-  setTimeout(() => {
+      weapon: 'Umbrella',
+      story: [...this.state.story, 'You Grab Your Umbrella'],
+      showLeaving: false,
+      showWeapon: true,
+    })
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'You Open The Door And Step Outside'],
+        showOutside: true,
+      });
+    }, 2000)
+  }
+  addBoomerang = (event) => {
     this.setState({
-      story: [...this.state.story, 'You Grab Your Backpack'],
-    });
-  }, 1000)
-  setTimeout(() => {
-    this.setState({
-      story: [...this.state.story, 'Do You Grab Anything Before You Leave?'],
-      showLeaving: true
-    });
-  }, 2000)
-}
-addUmbrella = (event) => {
-  this.setState({
-    weapon: 'Umbrella',
-    story: [...this.state.story, 'You Grab Your Umbrella'],
-    showLeaving: false,
-    showWeapon: true,
-  })
-  setTimeout(() => {
-    this.setState({
-      story: [...this.state.story, 'You Open The Door And Step Outside'],
-      showOutside: true,
-    });
-  }, 2000)
-}
-addBoomerang = (event) => {
-  this.setState({
-    weapon: 'Boomerang',
-    story: [...this.state.story, 'You Grab The Boomerang'],
-    showLeaving: false,
-    showWeapon: true,
-  })
-  setTimeout(() => {
-    this.setState({
-      story: [...this.state.story, 'You Open The Door And Step Outside'],
-      showOutside: true,
-    });
-  }, 2000)
-}
-basicAttack = (event) => {
-  var that = this;
-  if (this.state.enemyHealth === -20) {
-    setInterval(function () {
-      if (that.state.killedEnemy === false) {
-        if (that.state.playerHealth <= 1) {
-          that.setState({
-            story: [...that.state.story, 'YOU DIED'],
-            showOutside: false,
-            killedEnemy: true,
-            showDeath: true
-          })
-        }
-        that.setState({
-          playerHealth: that.state.playerHealth - 2
+      weapon: 'Boomerang',
+      story: [...this.state.story, 'You Grab The Boomerang'],
+      showLeaving: false,
+      showWeapon: true,
+    })
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'You Open The Door And Step Outside'],
+        showOutside: true,
+      });
+    }, 2000)
+  }
+  basicAttack = (event) => {
+    if (this.state.disablePlayerAttack === false) {
+      var that = this;
+      if (this.state.enemyHealth === -20) {
+        setInterval(function () {
+          if (that.state.killedEnemy === false) {
+            if (that.state.playerHealth <= 1) {
+              that.setState({
+                story: [...that.state.story, 'YOU DIED'],
+                showOutside: false,
+                killedEnemy: true,
+                showDeath: true
+              })
+            }
+            that.setState({
+              playerHealth: that.state.playerHealth - 2
+            })
+          } else {
+            that.setState({
+              playerHealth: that.state.playerHealth
+            })
+          }
+        }, 3000);
+        this.setState({
+          enemyHealth: this.state.enemies[0].grunt.health,
+          enemyHit: true,
         })
-      } else {
-        that.setState({
-          playerHealth: that.state.playerHealth
+      } else if (this.state.enemyHealth <= 1) {
+        let itemIndx = Math.floor(Math.random() * this.state.enemies[0].grunt.items.length)
+        this.setState({
+          droppedItem: this.state.enemies[0].grunt.items[itemIndx],
+          killedEnemy: true,
+          story: [...this.state.story, "You Killed An Enemy, It Dropped An Item"],
+          enemyHealth: -20
         })
       }
-    }, 3000);
-    this.setState({
-      enemyHealth: this.state.enemies[0].grunt.health,
-      showRunAway: true,
-      enemyHit: true,
-    })
-  } else if (this.state.enemyHealth <= 1) {
-    let itemIndx = Math.floor(Math.random() * this.state.enemies[0].grunt.items.length)
-    this.setState({
-      droppedItem: this.state.enemies[0].grunt.items[itemIndx],
-      killedEnemy: true,
-      story: [...this.state.story, "You Killed An Enemy, It Dropped An Item"],
-      enemyHealth: -20
-    })
-  }
-  else {
-    this.setState({
-      enemyHealth: this.state.enemyHealth - 2
-    })
-  }
-}
-companionAttack = (event) => {
-  var that = this;
-  if (this.state.enemyHealth === -20) {
-    setInterval(function () {
-      if (that.state.killedEnemy === false) {
-        if (that.state.playerHealth <= 1) {
-          that.setState({
-            story: [...that.state.story, 'YOU DIED'],
-            showOutside: false,
-            killedEnemy: true,
-            showDeath: true
-          })
-        }
-        that.setState({
-          playerHealth: that.state.playerHealth - 1
+      else {
+        this.setState({
+          enemyHealth: (this.state.enemyHealth - 2) - this.state.player[0].attack - this.state.player[0].range,
+          disablePlayerAttack: true,
         })
-      } else {
-        that.setState({
-          playerHealth: that.state.playerHealth
+        setTimeout(() => {
+          this.setState({
+            disablePlayerAttack: false
+          });
+        }, 1000)
+      }
+    }
+  }
+  companionAttack = (event) => {
+    if (this.state.disableCompanion === false) {
+      var that = this;
+      if (this.state.enemyHealth === -20) {
+        setInterval(function () {
+          if (that.state.killedEnemy === false) {
+            if (that.state.playerHealth <= 1) {
+              that.setState({
+                story: [...that.state.story, 'YOU DIED'],
+                showOutside: false,
+                killedEnemy: true,
+                showDeath: true
+              })
+            }
+            that.setState({
+              playerHealth: that.state.playerHealth - 1
+            })
+          } else {
+            that.setState({
+              playerHealth: that.state.playerHealth
+            })
+          }
+        }, 9000);
+        this.setState({
+          enemyHealth: this.state.enemies[0].grunt.health,
+          enemyHit: true,
+        })
+      } else if (this.state.enemyHealth <= 1) {
+        let itemIndx = Math.floor(Math.random() * this.state.enemies[0].grunt.items.length)
+        this.setState({
+          droppedItem: this.state.enemies[0].grunt.items[itemIndx],
+          killedEnemy: true,
+          story: [...this.state.story, "You Killed An Enemy, It Dropped An Item"],
+          enemyHealth: -20
         })
       }
-    }, 9000);
+      else {
+        this.setState({
+          enemyHealth: ((this.state.enemyHealth - 1) - this.state.player[0].friendship),
+          disableCompanion: true,
+        })
+        setTimeout(() => {
+          this.setState({
+            disableCompanion: false
+          });
+        }, 750)
+      }
+    }
+  }
+  pickUpItem = (event) => {
     this.setState({
-      enemyHealth: this.state.enemies[0].grunt.health,
-      showRunAway: true,
-      enemyHit: true,
-    })
-  } else if (this.state.enemyHealth <= 1) {
-    let itemIndx = Math.floor(Math.random() * this.state.enemies[0].grunt.items.length)
-    this.setState({
-      droppedItem: this.state.enemies[0].grunt.items[itemIndx],
-      killedEnemy: true,
-      story: [...this.state.story, "You Killed An Enemy, It Dropped An Item"],
-      enemyHealth: -20
+      inventory: [...this.state.inventory, this.state.droppedItem],
+      showInventory: true,
+      droppedItem: ''
     })
   }
-  else {
-    this.setState({
-      enemyHealth: this.state.enemyHealth - 1
+  leaveCombat = (event) => {
+    var dattack = 0
+    var drange = 0
+    var dfriendship = 0
+    if (this.state.weapon === "Umbrella") {
+      dattack += 1
+      if (this.state.showCompanion === true) {
+        dfriendship += 1
+      }
+    } else if (this.state.weapon === "Boomerang") {
+      drange += 1
+      if (this.state.showCompanion === true) {
+        dfriendship += 1
+      }
+    }
+    let updatePlayer = {
+      id: this.state.player[0].id,
+      attack: this.state.player[0].attack + dattack,
+      range: this.state.player[0].range + drange,
+      friendship: this.state.player[0].friendship + dfriendship,
+      name: this.state.player[0].name
+    }
+    fetch('http://localhost:3001/players', {
+      method: 'PUT',
+      body: JSON.stringify(updatePlayer),
+      headers: {
+        'Content-Type': 'application/json',
+      }
     })
-  }
-}
-pickUpItem = (event) => {
-  this.setState({
-    inventory: [...this.state.inventory, this.state.droppedItem],
-    showInventory: true,
-    droppedItem: ''
-  })
-}
+      .then(response => response.json())
+      .then((response) => {
+        this.setState({
+          player: [updatePlayer],
+          players: [response],
+          killedEnemy: false,
+        })
+      })
 
-render() {
-  return (
-    <div className="App container mainCont">
-      <div className="secondCont row">
-        <div className="col-4">
-          <Story showStory={this.state.showStory} story={this.state.story} />
-        </div>
-        <div className="col-6">
-          <Intro className="col-6" stayInBed={this.stayInBed} showDecisionOne={this.state.showDecisionOne} wakeUp={this.wakeUp} getUp={this.state.getUp} disableAlarm={this.state.disableAlarm} showEntry={this.state.showEntry} sendUser={this.sendUser} firstButton={this.firstButton} addUser={this.addUser} showFirst={this.state.showFirst} />
-          <Second food={this.state.food} showSecond={this.state.showSecond} pancakeClick={this.pancakeClick} starveClick={this.starveClick} muffinClick={this.muffinClick} />
-          <Death showDeath={this.state.showDeath} />
-          <Pancake stopCooking={this.stopCooking} leaveCooking={this.state.leaveCooking} flipBreakfast={this.flipBreakfast} grabBreakfast={this.grabBreakfast} breakfastDone={this.state.breakfastDone} breakfastFlip={this.state.breakfastFlip} breakfastPour={this.state.breakfastPour} cookBreakfast={this.cookBreakfast} showCooking={this.state.showCooking} showIngredients={this.state.showIngredients} addIngredient={this.addIngredient} stoveOn={this.state.stoveOn} grabbedPan={this.state.grabbedPan} grabbedBowl={this.state.grabbedBowl} grabPan={this.grabPan} grabBowl={this.grabBowl} turnOnStove={this.turnOnStove} showPancake={this.state.showPancake} />
-          <Clothes addBoots={this.addBoots} addPants={this.addPants} addShirt={this.addShirt} goNaked={this.goNaked} goOutside={this.goOutside} letsGo={this.state.letsGo} showPants={this.state.showPants} showShirt={this.state.showShirt} showNude={this.state.showNude} showBoots={this.state.showBoots} showClothes={this.state.showClothes} />
-          <Leaving addUmbrella={this.addUmbrella} addBoomerang={this.addBoomerang} showLeaving={this.state.showLeaving} />
-          <Outside companionAttack={this.companionAttack} pickUpItem={this.pickUpItem} killedEnemy={this.state.killedEnemy} droppedItem={this.state.droppedItem} basicAttack={this.basicAttack} showRunAway={this.state.showRunAway} enemyHit={this.state.enemyHit} showCompanion={this.state.showCompanion} companion={this.state.companion} userName={this.state.userName} showOutside={this.state.showOutside} playerHealth={this.state.playerHealth} enemyHealth={this.state.enemyHealth} enemies={this.state.enemies} />
-          <Bat enemies={this.state.enemies} panAttack={this.panAttack} pancakeThrow={this.pancakeThrow} pancakeOffer={this.pancakeOffer} userName={this.state.userName} showBat={this.state.showBat} />
-        </div>
-        <div className="col-2">
-          <Inventory showWeapon={this.state.showWeapon} weapon={this.state.weapon} showCompanion={this.state.showCompanion} showEquipment={this.state.showEquipment} companion={this.state.companion} equipment={this.state.equipment} showInventory={this.state.showInventory} inventory={this.state.inventory} />
+  }
+
+
+  render() {
+    return (
+      <div className="App container mainCont">
+        <div className="secondCont row">
+          <div className="col-4">
+            <Story showStory={this.state.showStory} story={this.state.story} />
+          </div>
+          <div className="col-6">
+            <Intro className="col-6" stayInBed={this.stayInBed} showDecisionOne={this.state.showDecisionOne} wakeUp={this.wakeUp} getUp={this.state.getUp} disableAlarm={this.state.disableAlarm} showEntry={this.state.showEntry} sendUser={this.sendUser} firstButton={this.firstButton} addUser={this.addUser} showFirst={this.state.showFirst} />
+            <Second food={this.state.food} showSecond={this.state.showSecond} pancakeClick={this.pancakeClick} starveClick={this.starveClick} muffinClick={this.muffinClick} />
+            <Death showDeath={this.state.showDeath} />
+            <Pancake stopCooking={this.stopCooking} leaveCooking={this.state.leaveCooking} flipBreakfast={this.flipBreakfast} grabBreakfast={this.grabBreakfast} breakfastDone={this.state.breakfastDone} breakfastFlip={this.state.breakfastFlip} breakfastPour={this.state.breakfastPour} cookBreakfast={this.cookBreakfast} showCooking={this.state.showCooking} showIngredients={this.state.showIngredients} addIngredient={this.addIngredient} stoveOn={this.state.stoveOn} grabbedPan={this.state.grabbedPan} grabbedBowl={this.state.grabbedBowl} grabPan={this.grabPan} grabBowl={this.grabBowl} turnOnStove={this.turnOnStove} showPancake={this.state.showPancake} />
+            <Clothes addBoots={this.addBoots} addPants={this.addPants} addShirt={this.addShirt} goNaked={this.goNaked} goOutside={this.goOutside} letsGo={this.state.letsGo} showPants={this.state.showPants} showShirt={this.state.showShirt} showNude={this.state.showNude} showBoots={this.state.showBoots} showClothes={this.state.showClothes} />
+            <Leaving addUmbrella={this.addUmbrella} addBoomerang={this.addBoomerang} showLeaving={this.state.showLeaving} />
+            <Outside leaveCombat={this.leaveCombat} disableCompanion={this.state.disableCompanion} disablePlayerAttack={this.state.disablePlayerAttack} companionAttack={this.companionAttack} pickUpItem={this.pickUpItem} killedEnemy={this.state.killedEnemy} droppedItem={this.state.droppedItem} basicAttack={this.basicAttack} enemyHit={this.state.enemyHit} showCompanion={this.state.showCompanion} companion={this.state.companion} userName={this.state.userName} showOutside={this.state.showOutside} playerHealth={this.state.playerHealth} enemyHealth={this.state.enemyHealth} enemies={this.state.enemies} />
+            <Bat enemies={this.state.enemies} panAttack={this.panAttack} pancakeThrow={this.pancakeThrow} pancakeOffer={this.pancakeOffer} userName={this.state.userName} showBat={this.state.showBat} />
+          </div>
+          <div className="col-2">
+            <Inventory showWeapon={this.state.showWeapon} weapon={this.state.weapon} showCompanion={this.state.showCompanion} showEquipment={this.state.showEquipment} companion={this.state.companion} equipment={this.state.equipment} showInventory={this.state.showInventory} inventory={this.state.inventory} />
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 }
 
 export default App;
