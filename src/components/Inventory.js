@@ -3,7 +3,7 @@ import React from 'react'
 const Inventory = (props) => {
     let inventory = props.inventory.map(item => {
         return (
-            <div className="invItem">{item}</div>
+            <div onClick={props.clickInventory} className="invItem">{item}</div>
         )
     })
     let equipment = props.equipment.map(item => {

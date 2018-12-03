@@ -66,7 +66,8 @@ class App extends Component {
       player: [],
       disableCompanion: false,
       disablePlayerAttack: false,
-      players: []
+      players: [],
+      weaponDmg: 0
     }
   }
   async componentDidMount() {
@@ -726,7 +727,7 @@ class App extends Component {
       }
       else {
         this.setState({
-          enemyHealth: (this.state.enemyHealth - 2) - this.state.player[0].attack - this.state.player[0].range,
+          enemyHealth: (this.state.enemyHealth - 2) - this.state.player[0].attack - this.state.player[0].range - this.state.weaponDmg,
           disablePlayerAttack: true,
         })
         setTimeout(() => {
@@ -793,16 +794,59 @@ class App extends Component {
       droppedItem: ''
     })
   }
+  clickInventory = (event) => {
+    var count = 0
+    var newInventory = []
+    if (event.target.innerHTML === "Muffin" || event.target.innerHTML === "Pancake" || event.target.innerHTML === "Bread") {
+      for (var i = 0; i < this.state.inventory.length; i++) {
+        if (count === 0) {
+          if (this.state.inventory[i] === event.target.innerHTML) {
+            count++
+          }
+          else {
+            newInventory.push(this.state.inventory[i])
+          }
+        }
+        else {
+          newInventory.push(this.state.inventory[i])
+        }
+      }
+      this.setState({
+        playerHealth: this.state.playerHealth + 4,
+        inventory: newInventory
+      })
+    } else if (event.target.innerHTML === "Bow" || event.target.innerHTML === "Dagger") {
+      for (var j = 0; j < this.state.inventory.length; j++) {
+        if (count === 0) {
+          if (this.state.inventory[j] === event.target.innerHTML) {
+            count++
+            newInventory.push(this.state.weapon)
+          }
+          else {
+            newInventory.push(this.state.inventory[j])
+          }
+        }
+        else {
+          newInventory.push(this.state.inventory[j])
+        }
+      }
+      this.setState({
+        weapon: event.target.innerHTML,
+        inventory: newInventory,
+        weaponDmg: 1
+      })
+    }
+  }
   leaveCombat = (event) => {
     var dattack = 0
     var drange = 0
     var dfriendship = 0
-    if (this.state.weapon === "Umbrella") {
+    if (this.state.weapon === "Umbrella" || this.state.weapon === "Dagger") {
       dattack += 1
       if (this.state.showCompanion === true) {
         dfriendship += 1
       }
-    } else if (this.state.weapon === "Boomerang") {
+    } else if (this.state.weapon === "Boomerang" || this.state.weapon === "Bow") {
       drange += 1
       if (this.state.showCompanion === true) {
         dfriendship += 1
@@ -852,7 +896,7 @@ class App extends Component {
             <Bat enemies={this.state.enemies} panAttack={this.panAttack} pancakeThrow={this.pancakeThrow} pancakeOffer={this.pancakeOffer} userName={this.state.userName} showBat={this.state.showBat} />
           </div>
           <div className="col-2">
-            <Inventory showWeapon={this.state.showWeapon} weapon={this.state.weapon} showCompanion={this.state.showCompanion} showEquipment={this.state.showEquipment} companion={this.state.companion} equipment={this.state.equipment} showInventory={this.state.showInventory} inventory={this.state.inventory} />
+            <Inventory clickInventory={this.clickInventory} showWeapon={this.state.showWeapon} weapon={this.state.weapon} showCompanion={this.state.showCompanion} showEquipment={this.state.showEquipment} companion={this.state.companion} equipment={this.state.equipment} showInventory={this.state.showInventory} inventory={this.state.inventory} />
           </div>
         </div>
       </div>
