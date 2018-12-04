@@ -722,7 +722,7 @@ class App extends Component {
           enemyHit: true,
         })
       } else if (this.state.enemyHealth <= 1) {
-        clearInterval(this._cancelInterval)
+        // clearInterval(this._cancelInterval)
         let itemIndx = Math.floor(Math.random() * this.state.enemies[0].grunt.items.length)
         this.setState({
           droppedItem: this.state.enemies[0].grunt.items[itemIndx],
@@ -858,7 +858,7 @@ class App extends Component {
         }
       }
       this.setState({
-        playerHealth: this.state.playerHealth + 100,
+        playerHealth: this.state.playerHealth + 40,
         inventory: newInventory
       })
     } else {
