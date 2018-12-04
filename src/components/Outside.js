@@ -15,7 +15,7 @@ const Outside = (props) => {
                         <button onClick={props.companionAttack} type="button" className={`btn ${props.disableCompanion ? 'btn-dark' : 'btn-light'} ${props.showCompanion ? '' : 'hidden'}`}>{props.companion} Attack</button>
                     </div>
                     <div className={`col-8 attackButtons ${props.killedEnemy ? '' : 'hidden'}`}>
-                        <button onClick={props.pickUpItem} type="button" className="btn btn-light">Pick Up {props.droppedItem}</button>
+                        <button onClick={props.pickUpItem} type="button" className={`btn btn-light ${props.disablePickedUp ? 'hidden' : ''}`}>Pick Up {props.droppedItem}</button>
                         <button onClick={props.leaveCombat} type="button" className="btn btn-light">Leave</button>
                     </div>
                     <div className={`col-3 enemyCont ${props.killedEnemy ? 'hidden' : ''}`}>

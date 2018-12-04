@@ -67,7 +67,8 @@ class App extends Component {
       disableCompanion: false,
       disablePlayerAttack: false,
       players: [],
-      weaponDmg: 0
+      weaponDmg: 0,
+      disablePickedUp: false,
     }
   }
   async componentDidMount() {
@@ -725,6 +726,7 @@ class App extends Component {
         // clearInterval(this._cancelInterval)
         let itemIndx = Math.floor(Math.random() * this.state.enemies[0].grunt.items.length)
         this.setState({
+          disablePickedUp: false,
           droppedItem: this.state.enemies[0].grunt.items[itemIndx],
           killedEnemy: true,
           story: [...this.state.story, "You Killed An Enemy, It Dropped An Item"],
@@ -799,7 +801,8 @@ class App extends Component {
     this.setState({
       inventory: [...this.state.inventory, this.state.droppedItem],
       showInventory: true,
-      droppedItem: ''
+      droppedItem: '',
+      disablePickedUp: true,
     })
   }
   clickInventory = (event) => {
@@ -919,7 +922,7 @@ class App extends Component {
             <Pancake stopCooking={this.stopCooking} leaveCooking={this.state.leaveCooking} flipBreakfast={this.flipBreakfast} grabBreakfast={this.grabBreakfast} breakfastDone={this.state.breakfastDone} breakfastFlip={this.state.breakfastFlip} breakfastPour={this.state.breakfastPour} cookBreakfast={this.cookBreakfast} showCooking={this.state.showCooking} showIngredients={this.state.showIngredients} addIngredient={this.addIngredient} stoveOn={this.state.stoveOn} grabbedPan={this.state.grabbedPan} grabbedBowl={this.state.grabbedBowl} grabPan={this.grabPan} grabBowl={this.grabBowl} turnOnStove={this.turnOnStove} showPancake={this.state.showPancake} />
             <Clothes addBoots={this.addBoots} addPants={this.addPants} addShirt={this.addShirt} goNaked={this.goNaked} goOutside={this.goOutside} letsGo={this.state.letsGo} showPants={this.state.showPants} showShirt={this.state.showShirt} showNude={this.state.showNude} showBoots={this.state.showBoots} showClothes={this.state.showClothes} />
             <Leaving addUmbrella={this.addUmbrella} addBoomerang={this.addBoomerang} showLeaving={this.state.showLeaving} />
-            <Outside leaveCombat={this.leaveCombat} disableCompanion={this.state.disableCompanion} disablePlayerAttack={this.state.disablePlayerAttack} companionAttack={this.companionAttack} pickUpItem={this.pickUpItem} killedEnemy={this.state.killedEnemy} droppedItem={this.state.droppedItem} basicAttack={this.basicAttack} enemyHit={this.state.enemyHit} showCompanion={this.state.showCompanion} companion={this.state.companion} userName={this.state.userName} showOutside={this.state.showOutside} playerHealth={this.state.playerHealth} enemyHealth={this.state.enemyHealth} enemies={this.state.enemies} />
+            <Outside disablePickedUp={this.state.disablePickedUp} leaveCombat={this.leaveCombat} disableCompanion={this.state.disableCompanion} disablePlayerAttack={this.state.disablePlayerAttack} companionAttack={this.companionAttack} pickUpItem={this.pickUpItem} killedEnemy={this.state.killedEnemy} droppedItem={this.state.droppedItem} basicAttack={this.basicAttack} enemyHit={this.state.enemyHit} showCompanion={this.state.showCompanion} companion={this.state.companion} userName={this.state.userName} showOutside={this.state.showOutside} playerHealth={this.state.playerHealth} enemyHealth={this.state.enemyHealth} enemies={this.state.enemies} />
             <Bat enemies={this.state.enemies} panAttack={this.panAttack} pancakeThrow={this.pancakeThrow} pancakeOffer={this.pancakeOffer} userName={this.state.userName} showBat={this.state.showBat} />
           </div>
           <div className="col-2">
