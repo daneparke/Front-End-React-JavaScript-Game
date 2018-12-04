@@ -1,6 +1,7 @@
 import React from 'react'
 
 const Second = (props) => {
+
     return (
         <>
             <div className={`buttonTwo ${props.showSecond ? '' : 'hidden'}`}>
@@ -11,7 +12,6 @@ const Second = (props) => {
                     <button onClick={props.starveClick} type="button" className="btn btn-light">Nothing</button>
                 </div>
             </div>
-
         </>
     )
 }

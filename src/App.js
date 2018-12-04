@@ -71,25 +71,29 @@ class App extends Component {
     }
   }
   async componentDidMount() {
-    let result = await fetch("http://localhost:3001/enemies")
+    let result = await fetch("https://react-game-api.herokuapp.com/enemies")
     let data = await result.json()
     this.setState({
       enemies: data.enemies
     })
-    let playerResult = await fetch("http://localhost:3001/players")
+    let playerResult = await fetch("https://react-game-api.herokuapp.com/players")
     let playerData = await playerResult.json()
     this.setState({
       players: playerData.players
     })
   }
-
-  setTimeOutAndState(number, string) {
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, string]
-      });
-    }, number)
+  handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      this.sendUser()
+    }
   }
+  // setTimeOutAndState(number, string) {
+  //   setTimeout(() => {
+  //     this.setState({
+  //       story: [...this.state.story, string]
+  //     });
+  //   }, number)
+  // }
   addUser = (event) => {
     this.setState({
       userName: event.target.value
@@ -460,7 +464,7 @@ class App extends Component {
       }
       for (var i = 0; i < this.state.players.length; i++) {
         if (this.state.players[i].name === this.state.userName) {
-          return (await fetch('http://localhost:3001/players', {
+          return (await fetch('https://react-game-api.herokuapp.com/players', {
             method: 'PUT',
             body: JSON.stringify(newPlayer),
             headers: {
@@ -479,7 +483,7 @@ class App extends Component {
           )
         }
       }
-      await fetch('http://localhost:3001/', {
+      await fetch('https://react-game-api.herokuapp.com/players', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -656,7 +660,7 @@ class App extends Component {
     }, 1000)
     setTimeout(() => {
       this.setState({
-        story: [...this.state.story, 'Do You Grab Anything Before You Leave?'],
+        story: [...this.state.story, 'What Do You Grab Before You Leave?'],
         showLeaving: true
       });
     }, 2000)
@@ -695,12 +699,13 @@ class App extends Component {
       if (this.state.enemyHealth === -20) {
         setInterval(function () {
           if (that.state.killedEnemy === false) {
-            if (that.state.playerHealth <= 1) {
+            if (that.state.playerHealth < 1) {
               that.setState({
                 story: [...that.state.story, 'YOU DIED'],
                 showOutside: false,
                 killedEnemy: true,
-                showDeath: true
+                showDeath: true,
+                showInventory: false,
               })
             }
             that.setState({
@@ -749,7 +754,8 @@ class App extends Component {
                 story: [...that.state.story, 'YOU DIED'],
                 showOutside: false,
                 killedEnemy: true,
-                showDeath: true
+                showDeath: true,
+                showInventory: false,
               })
             }
             that.setState({
@@ -835,6 +841,26 @@ class App extends Component {
         inventory: newInventory,
         weaponDmg: 1
       })
+    } else if (event.target.innerHTML === "Potion") {
+      for (var k = 0; k < this.state.inventory.length; k++) {
+        if (count === 0) {
+          if (this.state.inventory[k] === event.target.innerHTML) {
+            count++
+          }
+          else {
+            newInventory.push(this.state.inventory[k])
+          }
+        }
+        else {
+          newInventory.push(this.state.inventory[k])
+        }
+      }
+      this.setState({
+        playerHealth: this.state.playerHealth + 100,
+        inventory: newInventory
+      })
+    } else {
+      alert("Sorry I have not added this function yet!")
     }
   }
   leaveCombat = (event) => {
@@ -859,7 +885,7 @@ class App extends Component {
       friendship: this.state.player[0].friendship + dfriendship,
       name: this.state.player[0].name
     }
-    fetch('http://localhost:3001/players', {
+    fetch('https://react-game-api.herokuapp.com/players', {
       method: 'PUT',
       body: JSON.stringify(updatePlayer),
       headers: {
@@ -874,7 +900,6 @@ class App extends Component {
           killedEnemy: false,
         })
       })
-
   }
 
 
@@ -886,7 +911,7 @@ class App extends Component {
             <Story showStory={this.state.showStory} story={this.state.story} />
           </div>
           <div className="col-6">
-            <Intro className="col-6" stayInBed={this.stayInBed} showDecisionOne={this.state.showDecisionOne} wakeUp={this.wakeUp} getUp={this.state.getUp} disableAlarm={this.state.disableAlarm} showEntry={this.state.showEntry} sendUser={this.sendUser} firstButton={this.firstButton} addUser={this.addUser} showFirst={this.state.showFirst} />
+            <Intro className="col-6" handleKeyPress={this.handleKeyPress} stayInBed={this.stayInBed} showDecisionOne={this.state.showDecisionOne} wakeUp={this.wakeUp} getUp={this.state.getUp} disableAlarm={this.state.disableAlarm} showEntry={this.state.showEntry} sendUser={this.sendUser} firstButton={this.firstButton} addUser={this.addUser} showFirst={this.state.showFirst} />
             <Second food={this.state.food} showSecond={this.state.showSecond} pancakeClick={this.pancakeClick} starveClick={this.starveClick} muffinClick={this.muffinClick} />
             <Death showDeath={this.state.showDeath} />
             <Pancake stopCooking={this.stopCooking} leaveCooking={this.state.leaveCooking} flipBreakfast={this.flipBreakfast} grabBreakfast={this.grabBreakfast} breakfastDone={this.state.breakfastDone} breakfastFlip={this.state.breakfastFlip} breakfastPour={this.state.breakfastPour} cookBreakfast={this.cookBreakfast} showCooking={this.state.showCooking} showIngredients={this.state.showIngredients} addIngredient={this.addIngredient} stoveOn={this.state.stoveOn} grabbedPan={this.state.grabbedPan} grabbedBowl={this.state.grabbedBowl} grabPan={this.grabPan} grabBowl={this.grabBowl} turnOnStove={this.turnOnStove} showPancake={this.state.showPancake} />
