@@ -483,7 +483,7 @@ class App extends Component {
           )
         }
       }
-      await fetch('https://react-game-api.herokuapp.com/players', {
+      await fetch('https://react-game-api.herokuapp.com/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
