@@ -697,7 +697,7 @@ class App extends Component {
     if (this.state.disablePlayerAttack === false) {
       var that = this;
       if (this.state.enemyHealth === -20) {
-        setInterval(function () {
+        this._cancelInterval = setInterval(function () {
           if (that.state.killedEnemy === false) {
             if (that.state.playerHealth < 1) {
               that.setState({
@@ -722,6 +722,7 @@ class App extends Component {
           enemyHit: true,
         })
       } else if (this.state.enemyHealth <= 1) {
+        clearInterval(this._cancelInterval)
         let itemIndx = Math.floor(Math.random() * this.state.enemies[0].grunt.items.length)
         this.setState({
           droppedItem: this.state.enemies[0].grunt.items[itemIndx],
@@ -747,7 +748,7 @@ class App extends Component {
     if (this.state.disableCompanion === false) {
       var that = this;
       if (this.state.enemyHealth === -20) {
-        setInterval(function () {
+        this._cancelInterval = setInterval(function () {
           if (that.state.killedEnemy === false) {
             if (that.state.playerHealth <= 1) {
               that.setState({
@@ -772,6 +773,7 @@ class App extends Component {
           enemyHit: true,
         })
       } else if (this.state.enemyHealth <= 1) {
+        clearInterval(this._cancelInterval)
         let itemIndx = Math.floor(Math.random() * this.state.enemies[0].grunt.items.length)
         this.setState({
           droppedItem: this.state.enemies[0].grunt.items[itemIndx],
