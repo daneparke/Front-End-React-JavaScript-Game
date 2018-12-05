@@ -273,12 +273,10 @@ class App extends Component {
     })
   }
   stayInBed = (event) => {
-    setTimeout(() => {
-      this.setState({
-        showDecisionOne: false,
-        story: [...this.state.story, 'You Roll Back Over']
-      });
-    }, 500)
+    this.setState({
+      showDecisionOne: false,
+      story: [...this.state.story, 'You Roll Back Over']
+    });
     setTimeout(() => {
       this.setState({
         story: [...this.state.story, 'You Drift Back To Sleep']
