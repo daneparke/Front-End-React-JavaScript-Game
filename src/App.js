@@ -139,24 +139,29 @@ class App extends Component {
         story: [...this.state.story, 'You Pour The Batter Into The Pan']
       })
       this.setTimeOutAndState(1000, 'It Begins To Sizzle')
-      setTimeout(() => {
-        this.setState({
-          story: [...this.state.story, 'Flip The Pancake'],
-          breakfastFlip: true,
-        });
-      }, 2000)
-      if (this.state.breakfastFlip === true) {
-        this.setTimeOutAndState(3000, 'You Start To Smell Your Pancake Burning')
-      }
-      setTimeout(() => {
-        if (this.state.breakfastFlip === true)
-          this.setState({
-            story: [...this.state.story, 'You Burnt Your Pancake!'],
-            breakfastPour: true,
-            breakfastFlip: false,
-          });
-      }, 4000)
     }
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, 'Flip The Pancake'],
+        breakfastFlip: true,
+      });
+    }, 2000)
+    setTimeout(() => {
+      if (this.state.breakfastFlip === true) {
+        this.setState({
+          story: [...this.state.story, 'You Start To Smell Your Pancake Burning'],
+        });
+      }
+    }, 3000)
+    setTimeout(() => {
+      if (this.state.breakfastFlip === true) {
+        this.setState({
+          story: [...this.state.story, 'You Burnt Your Pancake!'],
+          breakfastPour: true,
+          breakfastFlip: false,
+        });
+      }
+    }, 4000)
   }
   flipBreakfast = (event) => {
     if (this.state.breakfastFlip === true) {
@@ -164,26 +169,30 @@ class App extends Component {
         breakfastFlip: false,
         story: [...this.state.story, 'You Flipped the Pancake']
       })
+      this.setTimeOutAndState(1000, 'It Is Almost Ready')
     }
-    this.setTimeOutAndState(1000, 'It Is Almost Ready')
     setTimeout(() => {
       this.setState({
         story: [...this.state.story, 'The Pancake Is Ready!'],
         breakfastDone: true,
       });
     }, 2000)
-    if (this.state.breakfastDone === true) {
-      this.setTimeOutAndState(3000, 'You Start To Smell Your Pancake Burning')
+    setTimeout(() => {
       if (this.state.breakfastDone === true) {
-        setTimeout(() => {
-          this.setState({
-            story: [...this.state.story, 'You Burnt Your Pancake!'],
-            breakfastPour: true,
-            breakfastDone: false,
-          });
-        }, 4000)
+        this.setState({
+          story: [...this.state.story, 'You Start To Smell Your Pancake Burning'],
+        });
       }
-    }
+    }, 3000)
+    setTimeout(() => {
+      if (this.state.breakfastDone === true) {
+        this.setState({
+          story: [...this.state.story, 'You Burnt Your Pancake!'],
+          breakfastPour: true,
+          breakfastDone: false,
+        });
+      }
+    }, 4000)
   }
   grabBreakfast = (event) => {
     if (this.state.breakfastDone === true) {
