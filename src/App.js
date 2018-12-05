@@ -88,13 +88,13 @@ class App extends Component {
       this.sendUser()
     }
   }
-  // setTimeOutAndState(number, string) {
-  //   setTimeout(() => {
-  //     this.setState({
-  //       story: [...this.state.story, string]
-  //     });
-  //   }, number)
-  // }
+  setTimeOutAndState(number, string) {
+    setTimeout(() => {
+      this.setState({
+        story: [...this.state.story, string]
+      });
+    }, number)
+  }
   addUser = (event) => {
     this.setState({
       userName: event.target.value
@@ -109,7 +109,6 @@ class App extends Component {
           story: [...this.state.story, 'You Snoozed Your Alarm', '...'],
           disableAlarm: true
         })
-
         setTimeout(() => {
           this.setState({
             disableAlarm: false,
@@ -132,32 +131,23 @@ class App extends Component {
       }
     }
   }
-  cookBreakfast = (event, setTimeOutAndState) => {
+  cookBreakfast = (event) => {
     if (this.state.breakfastPour === true) {
       this.setState({
         leaveCooking: false,
         breakfastPour: false,
         story: [...this.state.story, 'You Pour The Batter Into The Pan']
       })
-      // setTimeOutAndState(2000, 'It Begins To Sizzle')
-      setTimeout(() => {
-        this.setState({
-          story: [...this.state.story, 'It Begins To Sizzle']
-        });
-      }, 1000)
+      this.setTimeOutAndState(1000, 'It Begins To Sizzle')
       setTimeout(() => {
         this.setState({
           story: [...this.state.story, 'Flip The Pancake'],
           breakfastFlip: true,
         });
       }, 2000)
-      setTimeout(() => {
-        if (this.state.breakfastFlip === true) {
-          this.setState({
-            story: [...this.state.story, 'You Start To Smell Your Pancake Burning']
-          });
-        }
-      }, 3000)
+      if (this.state.breakfastFlip === true) {
+        this.setTimeOutAndState(3000, 'You Start To Smell Your Pancake Burning')
+      }
       setTimeout(() => {
         if (this.state.breakfastFlip === true)
           this.setState({
@@ -175,35 +165,25 @@ class App extends Component {
         story: [...this.state.story, 'You Flipped the Pancake']
       })
     }
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'It Is Almost Ready']
-      });
-    }, 1000)
+    this.setTimeOutAndState(1000, 'It Is Almost Ready')
     setTimeout(() => {
       this.setState({
         story: [...this.state.story, 'The Pancake Is Ready!'],
         breakfastDone: true,
       });
     }, 2000)
-    setTimeout(() => {
+    if (this.state.breakfastDone === true) {
+      this.setTimeOutAndState(3000, 'You Start To Smell Your Pancake Burning')
       if (this.state.breakfastDone === true) {
-        this.setState({
-          story: [...this.state.story, 'You Start To Smell Your Pancake Burning']
-        });
+        setTimeout(() => {
+          this.setState({
+            story: [...this.state.story, 'You Burnt Your Pancake!'],
+            breakfastPour: true,
+            breakfastDone: false,
+          });
+        }, 4000)
       }
-    }, 3000)
-
-    setTimeout(() => {
-      if (this.state.breakfastDone === true) {
-        this.setState({
-          story: [...this.state.story, 'You Burnt Your Pancake!'],
-          breakfastPour: true,
-          breakfastDone: false,
-        });
-
-      }
-    }, 4000)
+    }
   }
   grabBreakfast = (event) => {
     if (this.state.breakfastDone === true) {
@@ -225,11 +205,7 @@ class App extends Component {
       this.setState({
         showCooking: false,
       })
-      setTimeout(() => {
-        this.setState({
-          story: [...this.state.story, 'A Bat Flies Into Your Kitchen'],
-        });
-      }, 1000)
+      this.setTimeOutAndState(1000, 'A Bat Flies Into Your Kitchen')
       setTimeout(() => {
         this.setState({
           story: [...this.state.story, 'What Do You Do?'],
@@ -277,112 +253,32 @@ class App extends Component {
       showDecisionOne: false,
       story: [...this.state.story, 'You Roll Back Over']
     });
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'You Drift Back To Sleep']
-      });
-    }, 2000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, '...']
-      });
-    }, 3000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'zzz']
-      });
-    }, 5000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'zzZ']
-      });
-    }, 7000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'zZZ']
-      });
-    }, 9000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'ZZZ']
-      });
-    }, 11000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'You Feel Something Next To You']
-      });
-    }, 12000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'You Roll Over And Embrace It']
-      });
-    }, 14000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'It Feels Like Something Completely Foreign']
-      });
-    }, 16000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'You Open Your Eyes']
-      });
-    }, 18000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, '!!!']
-      });
-    }, 19000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'You See A Troll In You Arms']
-      });
-    }, 20000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'YOU SCREAM!!']
-      });
-    }, 21000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'The Troll Wakes Up and Screams!']
-      });
-    }, 22000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'AAARRGGHHHH!!!!']
-      });
-    }, 23000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'In The Chaos The Troll Rolls Over']
-      });
-    }, 24000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'He Rolls On Top Of You!']
-      });
-    }, 25000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'Everything Goes Dark']
-      });
-    }, 26000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'You Try To Breathe But You Cannot']
-      });
-    }, 27000)
+    this.setTimeOutAndState(2000, 'You Drift Back To Sleep')
+    this.setTimeOutAndState(3000, '...')
+    this.setTimeOutAndState(5000, 'zzz')
+    this.setTimeOutAndState(7000, 'zzZ')
+    this.setTimeOutAndState(9000, 'zZZ')
+    this.setTimeOutAndState(11000, 'ZZZ')
+    this.setTimeOutAndState(12000, 'You Feel Something Next To You')
+    this.setTimeOutAndState(14000, 'You Roll Over And Embrace It')
+    this.setTimeOutAndState(16000, 'It Feels Like Something Completely Foreign')
+    this.setTimeOutAndState(18000, 'You Open Your Eyes')
+    this.setTimeOutAndState(19000, '!!!')
+    this.setTimeOutAndState(20000, 'You See A Troll In You Arms')
+    this.setTimeOutAndState(21000, 'YOU SCREAM!!!')
+    this.setTimeOutAndState(22000, 'The Troll Wakes Up and Screams!')
+    this.setTimeOutAndState(23000, 'AAARRGGHHHH!!!!')
+    this.setTimeOutAndState(24000, 'In The Chaos The Troll Rolls Over')
+    this.setTimeOutAndState(25000, 'He Rolls On Top Of You!')
+    this.setTimeOutAndState(26000, 'Everything Goes Dark')
+    this.setTimeOutAndState(27000, 'You Try To Breathe But You Cannot')
     setTimeout(() => {
       this.setState({
         story: [...this.state.story, 'You Die'],
         showDeath: true
       });
     }, 29000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'Maybe Get Out Of Bed You Lazy Butt']
-      });
-    }, 30000)
+    this.setTimeOutAndState(31000, 'Maybe Get Out Of Bed You Lazy Butt')
   }
   wakeUp = (event) => {
     this.setState({
@@ -407,16 +303,8 @@ class App extends Component {
       story: [...this.state.story, 'You Grab A Muffin From The Counter'],
       showInventory: true,
     })
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'Now Lets Get Dressed'],
-      });
-    }, 1000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'You Open Your Closet'],
-      });
-    }, 2000)
+    this.setTimeOutAndState(1000, 'Now Lets Get Dressed')
+    this.setTimeOutAndState(2000, 'You Open Your Closet')
     setTimeout(() => {
       this.setState({
         story: [...this.state.story, 'What Do You Want To Wear?'],
@@ -429,16 +317,8 @@ class App extends Component {
       showSecond: false,
       story: [...this.state.story, 'I Am Too Good For Food!']
     })
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'Well Lets Get Dressed Than'],
-      });
-    }, 1000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'You Open Your Closet'],
-      });
-    }, 2000)
+    this.setTimeOutAndState(1000, 'Well Lets Get Dressed Than')
+    this.setTimeOutAndState(2000, 'You Open Your Closet')
     setTimeout(() => {
       this.setState({
         story: [...this.state.story, 'What Do You Want To Wear?'],
@@ -457,9 +337,6 @@ class App extends Component {
         attack: 0,
         range: 0,
         friendship: 0
-      }
-      if (this.state.players.length > 15) {
-
       }
       for (var i = 0; i < this.state.players.length; i++) {
         if (this.state.players[i].name === this.state.userName) {
@@ -498,9 +375,7 @@ class App extends Component {
             showStory: true,
           })
         })
-
     }
-
     if (this.state.userName.length > 10) {
       alert("Sorry Too Long Of A Name, Keep It Under 10 Characters")
     }
@@ -543,32 +418,16 @@ class App extends Component {
       story: [...this.state.story, 'You Hold A Pancake Up'],
       showBat: false,
     })
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'Whispering Sweet Nothing'],
-      });
-    }, 1000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'The Bat Lands On Your Hand'],
-      });
-    }, 2000)
+    this.setTimeOutAndState(1000, 'Whispering Sweet Nothing')
+    this.setTimeOutAndState(2000, 'The Bat Lands On Your Hand')
     setTimeout(() => {
       this.setState({
         story: [...this.state.story, 'You Share The Pancake'],
         inventory: ["Pancake", "Pancake"]
       });
     }, 3000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'The Bat Looks Into Your Eyes'],
-      });
-    }, 4000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'The Bat Winks At You'],
-      });
-    }, 5000)
+    this.setTimeOutAndState(4000, 'The Bat Looks Into Your Eyes')
+    this.setTimeOutAndState(5000, 'The Bat Winks At You')
     setTimeout(() => {
       this.setState({
         story: [...this.state.story, 'You Got A New Companion!'],
@@ -583,16 +442,8 @@ class App extends Component {
       showCooking: false,
       story: [...this.state.story, 'You Stop Cooking']
     })
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'Now Lets Get Dressed'],
-      });
-    }, 1000)
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'You Open Your Closet'],
-      });
-    }, 2000)
+    this.setTimeOutAndState(1000, 'Now Lets Get Dressed')
+    this.setTimeOutAndState(2000, 'You Open Your Closet')
     setTimeout(() => {
       this.setState({
         story: [...this.state.story, 'What Do You Want To Wear?'],
@@ -635,11 +486,7 @@ class App extends Component {
       story: [...this.state.story, 'LETS GO STREAKING!!!'],
       showClothes: false,
     })
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'You Prance To The Door'],
-      });
-    }, 1000)
+    this.setTimeOutAndState(1000, 'You Prance To The Door')
     setTimeout(() => {
       this.setState({
         story: [...this.state.story, 'Do You Grab Anything Before You Leave?'],
@@ -652,11 +499,7 @@ class App extends Component {
       story: [...this.state.story, 'You Walk To The Door'],
       showClothes: false,
     })
-    setTimeout(() => {
-      this.setState({
-        story: [...this.state.story, 'You Grab Your Backpack'],
-      });
-    }, 1000)
+    this.setTimeOutAndState(1000, 'You Grab Your Backpack')
     setTimeout(() => {
       this.setState({
         story: [...this.state.story, 'What Do You Grab Before You Leave?'],
@@ -776,6 +619,7 @@ class App extends Component {
         clearInterval(this._cancelInterval)
         let itemIndx = Math.floor(Math.random() * this.state.enemies[0].grunt.items.length)
         this.setState({
+          disablePickedUp: false,
           droppedItem: this.state.enemies[0].grunt.items[itemIndx],
           killedEnemy: true,
           story: [...this.state.story, "You Killed An Enemy, It Dropped An Item"],
@@ -905,7 +749,6 @@ class App extends Component {
       })
   }
 
-
   render() {
     return (
       <div className="App container mainCont">
@@ -931,5 +774,4 @@ class App extends Component {
     );
   }
 }
-
 export default App;

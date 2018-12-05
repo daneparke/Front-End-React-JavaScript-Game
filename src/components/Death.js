@@ -17,6 +17,8 @@ const Death = (props) => {
                 <p>Or email me at <br></br>dane.parke@colorado.edu</p>
                 <br></br>
                 <p>Easter Egg for game: if you make 3 pancakes you could give the bat a pancake for an extra attack!</p>
+                <br></br>
+                <p>Also click on inventory to use most items</p>
             </div>
         </>
     )
